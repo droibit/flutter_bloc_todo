@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
-import 'config.dart';
 
 @immutable
 class DependencyProvider extends InheritedWidget {

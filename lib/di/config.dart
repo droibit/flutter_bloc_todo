@@ -5,9 +5,12 @@ import 'package:flutter_bloc_todo/data/data.dart';
 
 Future<Injector> configureInjector() async {
   final injector = Injector.appInstance;
-  
+
   final _prefs = await SharedPreferences.getInstance();
   injector.registerDependency<SharedPreferences>((_) => _prefs);
+
+  injector
+      .registerDependency<PackageInfoProvider>((_) => PackageInfoProvider());
 
   // TODO: register dependencies.
 
