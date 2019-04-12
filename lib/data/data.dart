@@ -1,1 +1,1 @@
-export 'package_info/package_info_provider.dart';
+export 'package_info/package_info_repository.dart';

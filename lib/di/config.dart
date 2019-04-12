@@ -1,6 +1,7 @@
-import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:injector/injector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 
 Future<Injector> configureInjector() async {
@@ -9,8 +10,9 @@ Future<Injector> configureInjector() async {
   final _prefs = await SharedPreferences.getInstance();
   injector.registerDependency<SharedPreferences>((_) => _prefs);
 
-  injector
-      .registerDependency<PackageInfoProvider>((_) => PackageInfoProvider());
+  injector.registerDependency<PackageInfoRepository>(
+    (_) => PackageInfoRepository(),
+  );
 
   // TODO: register dependencies.
 
