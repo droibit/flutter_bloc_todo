@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
@@ -57,6 +58,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    Logger.log('Will show page!');
+  }
 
   void _incrementCounter() {
     setState(() {
