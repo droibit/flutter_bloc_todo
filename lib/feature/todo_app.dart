@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
-import './tasks/tasks_page.dart';
+import 'router/router.dart';
 
 class TodoApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -31,7 +31,7 @@ class TodoApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: TasksPage(title: 'Flutter Demo Home Page'),
+      onGenerateRoute: onHandleRoute,
     );
   }
 }
