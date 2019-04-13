@@ -10,8 +10,17 @@ Future<Injector> configureInjector() async {
   final _prefs = await SharedPreferences.getInstance();
   injector.registerDependency<SharedPreferences>((_) => _prefs);
 
-  injector.registerDependency<PackageInfoRepository>(
+  injector.registerSingleton(
+    (_injector) => LocalSource(sharedPrefs: _injector.getDependency()),
+  );
+
+  injector.registerSingleton<PackageInfoRepository>(
     (_) => PackageInfoRepository(),
+  );
+
+  injector.registerSingleton<UserSettingsRepository>(
+    (_injector) =>
+        UserSettingsRepository(localSource: _injector.getDependency()),
   );
 
   // TODO: register dependencies.
