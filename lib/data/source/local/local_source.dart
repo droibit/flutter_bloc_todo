@@ -15,12 +15,12 @@ class LocalSource {
 
   final SharedPreferences _sharedPrefs;
 
-  TaskSort getTaskSort() {
+  TaskSort loadTaskSort() {
     final json = _sharedPrefs.getString(_KEY_TASK_SORT);
     return TaskSort.fromMap(jsonDecode(json));
   }
 
-  Future<bool> setTasksSort(TaskSort sort) async {
+  Future<bool> storeTasksSort(TaskSort sort) async {
     final json = jsonEncode(sort.toJson());
     return _sharedPrefs.setString(_KEY_TASK_SORT, json);
   }
