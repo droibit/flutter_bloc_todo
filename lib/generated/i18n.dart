@@ -19,7 +19,12 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get app_name => "BLoC TODO";
+  String get appCategory => "App";
+  String get appName => "BLoC TODO";
+  String get buildVersionSubtitle => "Version: ";
+  String get buildVersionTitle => "Build version";
+  String get settings => "Settings";
+  String get sourceCodeTitle => "Source code";
 }
 
 class $en extends S {

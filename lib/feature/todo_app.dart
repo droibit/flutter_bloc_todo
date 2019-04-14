@@ -9,7 +9,7 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => S.of(context).app_name,
+      onGenerateTitle: (context) => S.of(context).appName,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

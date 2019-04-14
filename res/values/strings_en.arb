@@ -1,3 +1,8 @@
 {
-  "app_name": "BLoC TODO"
+  "appName": "BLoC TODO",
+  "settings": "Settings",
+  "appCategory": "App",
+  "sourceCodeTitle": "Source code",
+  "buildVersionTitle": "Build version",
+  "buildVersionSubtitle": "Version: "
 }
