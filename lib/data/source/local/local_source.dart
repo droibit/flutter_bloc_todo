@@ -17,6 +17,9 @@ class LocalSource {
 
   TaskSort loadTaskSort() {
     final json = _sharedPrefs.getString(_KEY_TASK_SORT);
+    if (json == null) {
+      return null;
+    }
     return TaskSort.fromMap(jsonDecode(json));
   }
 
