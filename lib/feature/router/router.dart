@@ -6,20 +6,33 @@ import 'package:flutter_bloc_todo/feature/tasks/tasks_page.dart';
 import 'paged_route.dart';
 
 final _initialRoute = TasksPage.route.copyWith(name: '/');
+// TODO: Comment out if you want to switch initial page on app launched.
+//final _initialRoute = NamedRoute(
+//  '/',
+//      (settings) =>
+//      MaterialPageRoute<TasksPage>(
+//        builder: (context) {
+//          final deps = DependencyProvider.of(context);
+//          deps.userSettingsRepository
+//          return TasksPage(title: 'Flutter Demo Home Page');
+//        },
+//        settings: settings,
+//      ),
+//);
 final _routes = <NamedRoute>[
   _initialRoute,
   TasksPage.route,
 ];
 
 final _router = Map<String, RouteFactory>.fromEntries(
-  _routes.map((r) => MapEntry(r.name, r.factory)),
+  _routes.map((route) => MapEntry(route.name, route.factory)),
 );
 
-final RouteFactory onHandleRoute = (settings) {
+Route<dynamic> onHandleRoute(RouteSettings settings) {
   Logger.log('onRoute(name=${settings.name})');
   final route = _router[settings.name];
   if (route == null) {
     throw StateError('Unknown route: ${settings.name}');
   }
   return _router[settings.name](settings);
-};
+}
