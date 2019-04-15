@@ -20,11 +20,36 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get appCategory => "App";
-  String get appName => "BLoC TODO";
-  String get buildVersionSubtitle => "Version: ";
+  String get appName => "BLoC TO-DO";
   String get buildVersionTitle => "Build version";
+  String get editTask => "Edit TO-DO";
+  String get editTaskDescHint => "Enter your TO-DO here.";
+  String get editTaskDescLabel => "Description";
+  String get editTaskFailedToUpdate => "Failed to update TO-DO.";
+  String get editTaskSuccessfulToUpdate => "TO-DO updated.";
+  String get editTaskTitleLabel => "Title";
+  String get editTaskTitleValidationError => "Title is required.";
+  String get newTask => "New TO-DO";
+  String get newTaskFailedToCreate => "Failed to create new TO-DO.";
+  String get newTaskSuccessfulToCreate => "TO-DO created.";
+  String get noTasks => "No TO-DOs.";
   String get settings => "Settings";
   String get sourceCodeTitle => "Source code";
+  String get statistics => "Statistics";
+  String get statisticsActiveTasks => "Active TO-DOs:";
+  String get statisticsCompletedTasks => "Completed TO-DOs:";
+  String get todoList => "TO-DO List";
+  String get todoListClearCompleted => "Clear completed";
+  String get todoListFilterActive => "Active";
+  String get todoListFilterAll => "All";
+  String get todoListFilterCompleted => "Completed";
+  String get todoListHeaderActive => "Active TO-DOs";
+  String get todoListHeaderAll => "All TO-DOs";
+  String get todoListHeaderCompleted => "Completed TO-DOs";
+  String get todoListSortBy => "Sort by";
+  String get todoListSortByCreatedDate => "Created Date";
+  String get todoListSortByTitle => "Title";
+  String buildVersionSubtitle(String version) => "Version: $version";
 }
 
 class $en extends S {
