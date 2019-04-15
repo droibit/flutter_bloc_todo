@@ -9,22 +9,28 @@ class UserSettingsRepository {
   UserSettingsRepository({
     @required LocalSource localSource,
   })  : assert(localSource != null),
-        _localSource = localSource,
-        _taskSortSubject = BehaviorSubject<TaskSort>() {
-    _taskSortSubject.add(_localSource.loadTaskSort() ?? _defaultTaskSort);
-  }
+        _localSource = localSource;
 
   final LocalSource _localSource;
 
-  final BehaviorSubject<TaskSort> _taskSortSubject;
+  BehaviorSubject<TaskSort> _taskSortSubject;
 
-  ValueObservable<TaskSort> get taskSort => _taskSortSubject.stream;
+  ValueObservable<TaskSort> get taskSort {
+    _ensureTaskSortSubject(needLoad: true);
+    return _taskSortSubject.stream;
+  }
 
   Future<void> storeTasksSort(TaskSort sort) async {
     final successful = await _localSource.storeTasksSort(sort);
     if (successful) {
+      _ensureTaskSortSubject();
       _taskSortSubject.add(sort);
     }
     Logger.log('storeTasksSort(result=$successful');
+  }
+
+  void _ensureTaskSortSubject({bool needLoad = false}) {
+    _taskSortSubject ??= BehaviorSubject.seeded(
+        needLoad ? (_localSource.loadTaskSort() ?? _defaultTaskSort) : null);
   }
 }

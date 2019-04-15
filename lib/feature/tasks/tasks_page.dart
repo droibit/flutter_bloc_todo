@@ -8,6 +8,8 @@ import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 
+import './tasks_bloc.dart';
+
 class TasksPage extends StatelessWidget {
   static final route = NamedRoute(
     '/tasks',
@@ -19,21 +21,22 @@ class TasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final strings = S.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(strings.appName),
-        centerTitle: Platform.isIOS,
-        elevation: 0.0,
-        actions: const <Widget>[
-          _TasksFilterPopupMenu(),
-          _OverflowPopupMenu(),
-        ],
+    return TasksBlocProvider(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(S.of(context).appName),
+          centerTitle: Platform.isIOS,
+          elevation: 0.0,
+          actions: const <Widget>[
+            _TasksFilterPopupMenu(),
+            _OverflowPopupMenu(),
+          ],
+        ),
+        body: Center(
+          child: const Text('TODO'),
+        ),
+        floatingActionButton: const _NewTaskButton(),
       ),
-      body: Center(
-        child: const Text('TODO'),
-      ),
-      floatingActionButton: const _NewTaskButton()
     );
   }
 }
@@ -115,8 +118,7 @@ class _OverflowPopupMenu extends StatelessWidget {
 }
 
 class _NewTaskButton extends StatelessWidget {
-
-  const _NewTaskButton({ Key key }) : super(key: key);
+  const _NewTaskButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
