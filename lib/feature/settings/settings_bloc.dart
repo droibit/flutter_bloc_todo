@@ -8,7 +8,7 @@ import 'package:flutter_bloc_todo/di/di.dart';
 class SettingsBloc implements Bloc {
   SettingsBloc({
     @required PackageInfoRepository packageInfoRepository,
-  })  : assert(_packageInfoRepository != null),
+  })  : assert(packageInfoRepository != null),
         _packageInfoRepository = packageInfoRepository;
 
   final PackageInfoRepository _packageInfoRepository;
