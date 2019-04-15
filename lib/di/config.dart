@@ -1,8 +1,7 @@
+import 'package:flutter_bloc_todo/data/data.dart';
+import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:injector/injector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flutter_bloc_todo/utils/logger.dart';
-import 'package:flutter_bloc_todo/data/data.dart';
 
 Future<Injector> configureInjector() async {
   final injector = Injector.appInstance;
@@ -21,6 +20,10 @@ Future<Injector> configureInjector() async {
   injector.registerSingleton<UserSettingsRepository>(
     (_injector) =>
         UserSettingsRepository(localSource: _injector.getDependency()),
+  );
+
+  injector.registerSingleton<TaskRepository>(
+    (_injector) => TaskRepository(localSource: _injector.getDependency()),
   );
 
   // TODO: register dependencies.

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_todo/data/source/entity/task.dart';
 import 'package:flutter_bloc_todo/data/source/entity/task_sort.dart';
 
 const _KEY_TASK_SORT = 'task_sort';
+const _KEY_TASKS = 'tasks';
 
 class LocalSource {
   LocalSource({@required SharedPreferences sharedPrefs})
@@ -14,6 +15,22 @@ class LocalSource {
         _sharedPrefs = sharedPrefs;
 
   final SharedPreferences _sharedPrefs;
+
+  List<Task> loadTasks() {
+    final json = _sharedPrefs.getString(_KEY_TASKS);
+    if (json == null) {
+      return [];
+    }
+    // ignore: avoid_as
+    return (jsonDecode(json) as List<dynamic>)
+        .map((dynamic taskJson) => Task.fromJson(taskJson))
+        .toList();
+  }
+
+  Future<bool> storeTasks(List<Task> tasks) {
+    final json = jsonEncode(tasks);
+    return _sharedPrefs.setString(_KEY_TASKS, json);
+  }
 
   TaskSort loadTaskSort() {
     final json = _sharedPrefs.getString(_KEY_TASK_SORT);

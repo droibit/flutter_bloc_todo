@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:injector/injector.dart';
-
 import 'package:flutter_bloc_todo/data/data.dart';
+import 'package:injector/injector.dart';
 
 @immutable
 class DependencyProvider extends InheritedWidget {
@@ -18,10 +17,13 @@ class DependencyProvider extends InheritedWidget {
   UserSettingsRepository get userSettingsRepository =>
       _injector.getDependency();
 
+  TaskRepository get taskRepository => _injector.getDependency();
+
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 
   static DependencyProvider of(BuildContext context) {
+    // ignore: avoid_as
     return context
         .ancestorInheritedElementForWidgetOfExactType(DependencyProvider)
         .widget as DependencyProvider;

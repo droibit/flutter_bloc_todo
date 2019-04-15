@@ -1,18 +1,24 @@
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'task.g.dart';
+
+@JsonSerializable(nullable: false)
 @immutable
 class Task {
   const Task({
     @required this.id,
     @required this.title,
-    @required this.description,
     @required this.timestamp,
-    @required this.completed,
+    this.description = '',
+    this.completed = false,
   })  : assert(id != null),
         assert(title != null),
         assert(description != null),
         assert(timestamp != null),
         assert(completed != null);
+
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
   final String id;
 
@@ -25,6 +31,8 @@ class Task {
   final bool completed;
 
   bool get isActive => !completed;
+
+  Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   Task copyWith({
     String id,
