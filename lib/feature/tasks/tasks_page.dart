@@ -123,7 +123,30 @@ class _NewTaskButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: const Icon(Icons.add),
-      onPressed: null,
+      onPressed: () => _navigateToNewTask(context),
     );
   }
+
+  Future<void> _navigateToNewTask(BuildContext context) async {
+    final bool successful =
+        await Navigator.pushNamed(context, NewTaskPage.route.name);
+
+    if (successful == null) {
+      return;
+    }
+
+    final strings = S.of(context);
+    _showSnackBar(
+      context,
+      message: successful
+          ? strings.newTaskSuccessfulToCreate
+          : strings.newTaskFailedToCreate,
+    );
+  }
+}
+
+void _showSnackBar(BuildContext context, {@required String message}) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
 }
