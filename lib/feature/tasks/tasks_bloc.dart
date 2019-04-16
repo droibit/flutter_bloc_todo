@@ -4,6 +4,7 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
+import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef int _Compare<T>(T a, T b);
@@ -17,8 +18,10 @@ class TasksBloc implements Bloc {
         _taskRepository = taskRepository,
         _userSettingsRepository = userSettingsRepository,
         _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all),
-        _taskSortController = StreamController() {
+        _taskSortController = PublishSubject(),
+        _taskCompletedController = PublishSubject() {
     _taskSortController.stream.listen(_onTaskSortChanged);
+    _taskCompletedController.listen(_onTaskCompleted);
   }
 
   final TaskRepository _taskRepository;
@@ -27,32 +30,41 @@ class TasksBloc implements Bloc {
 
   final BehaviorSubject<TasksFilter> _taskFilterSubject;
 
-  final StreamController<TaskSort> _taskSortController;
+  final PublishSubject<TaskSort> _taskSortController;
 
-  ValueObservable<List<Task>> _tasksObservable;
+  final PublishSubject<TaskCompleted> _taskCompletedController;
 
-  ValueObservable<List<Task>> get tasks {
-    _tasksObservable ??= Observable.combineLatest3(
+  Observable<TasksView> _tasksViewObservable;
+
+  Observable<TasksView> get tasksView {
+    _tasksViewObservable ??= Observable.combineLatest3(
       _taskRepository.tasks,
       _taskFilterSubject,
       _userSettingsRepository.taskSort,
       (List<Task> tasks, TasksFilter filter, TaskSort taskSort) {
-        return _filterTasks(tasks, filter)..sort(_resolveCompare(taskSort));
+        return TasksView(
+          tasks: _filterTasks(tasks, filter)..sort(_resolveCompare(taskSort)),
+          filter: filter,
+          taskSort: taskSort,
+        );
       },
     );
-    return _tasksObservable;
+    return _tasksViewObservable;
   }
 
-  ValueObservable<TasksFilter> get tasksFilter => _taskFilterSubject.stream;
+  ValueObservable<TaskSort> get taskSort => _userSettingsRepository.taskSort;
 
   Sink<TasksFilter> get changeTaskFilter => _taskFilterSubject.sink;
 
-  ValueObservable<TaskSort> get taskSort => _userSettingsRepository.taskSort;
+  Sink<TaskSort> get changeTaskSort => _taskSortController.sink;
+
+  Sink<TaskCompleted> get taskCompleted => _taskCompletedController.sink;
 
   @override
   void dispose() {
     _taskFilterSubject.close();
     _taskSortController.close();
+    _taskCompletedController.close();
   }
 
   List<Task> _filterTasks(List<Task> src, TasksFilter filter) {
@@ -84,8 +96,21 @@ class TasksBloc implements Bloc {
   }
 
   void _onTaskSortChanged(TaskSort newTaskSort) {
+    Logger.log('onTaskSortChanged(newTaskSort=$newTaskSort})');
+
     if (newTaskSort != _userSettingsRepository.taskSort.value) {
       _userSettingsRepository.storeTasksSort(newTaskSort);
+    }
+  }
+
+  void _onTaskCompleted(TaskCompleted toggle) {
+    Logger.log(
+        '_onTaskCompletedToggled(task=${toggle.id}, completed=${toggle.completed})');
+
+    if (toggle.completed) {
+      _taskRepository.completeTask(toggle.id);
+    } else {
+      _taskRepository.activateTask(toggle.id);
     }
   }
 }
@@ -106,4 +131,29 @@ class TasksBlocProvider extends BlocProvider<TasksBloc> {
         );
 
   static TasksBloc of(BuildContext context) => BlocProvider.of(context);
+}
+
+@immutable
+class TasksView {
+  const TasksView({
+    @required this.tasks,
+    @required this.filter,
+    @required this.taskSort,
+  });
+
+  final List<Task> tasks;
+  final TasksFilter filter;
+  final TaskSort taskSort;
+}
+
+@immutable
+class TaskCompleted {
+  const TaskCompleted({
+    @required this.id,
+    @required this.completed,
+  })  : assert(id != null),
+        assert(completed != null);
+
+  final String id;
+  final bool completed;
 }
