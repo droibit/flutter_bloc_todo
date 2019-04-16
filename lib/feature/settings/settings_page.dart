@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
-import 'package:flutter_bloc_todo/feature/_widgets/BackIconButton.dart';
-import 'package:flutter_bloc_todo/feature/router/paged_route.dart';
+import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
+import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
@@ -11,7 +11,7 @@ import './settings_bloc.dart';
 class SettingsPage extends StatelessWidget {
   static final route = NamedRoute(
     '/settings',
-    (settings) => MaterialPageRoute<SettingsPage>(
+    (settings) => MaterialPageRoute<void>(
           builder: (_) => SettingsPage(),
           settings: settings,
           fullscreenDialog: true,

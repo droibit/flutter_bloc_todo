@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
-import 'package:flutter_bloc_todo/feature/router/paged_route.dart';
-import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
+import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 
