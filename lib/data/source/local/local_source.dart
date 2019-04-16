@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter_bloc_todo/data/source/entity/task.dart';
 import 'package:flutter_bloc_todo/data/source/entity/task_sort.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _KEY_TASK_SORT = 'task_sort';
 const _KEY_TASKS = 'tasks';

@@ -1,9 +1,8 @@
 import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
+import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc implements Bloc {
   SettingsBloc({

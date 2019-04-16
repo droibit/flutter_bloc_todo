@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
@@ -8,6 +6,8 @@ import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef int _Compare<T>(T a, T b);
+
+enum TasksFilter { all, active, completed }
 
 class TasksBloc implements Bloc {
   TasksBloc({

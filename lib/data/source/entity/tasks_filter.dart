@@ -1,1 +1,0 @@
-enum TasksFilter { all, active, completed }

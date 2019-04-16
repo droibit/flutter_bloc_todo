@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:flutter_bloc_todo/data/source/source.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
+import 'package:rxdart/rxdart.dart';
 
 const _defaultTaskSort = TaskSort(SortBy.title, Order.asc);
 
