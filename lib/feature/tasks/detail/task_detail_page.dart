@@ -6,6 +6,7 @@ import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:intl/intl.dart';
 
@@ -16,8 +17,6 @@ class TaskDetailPage extends StatelessWidget {
     @required Task initialTask,
   })  : _initialTask = initialTask,
         super(key: key);
-
-  final Task _initialTask;
 
   static final route = NamedRoute(
     '/tasks/detail',
@@ -31,6 +30,8 @@ class TaskDetailPage extends StatelessWidget {
           settings: settings,
         ),
   );
+
+  final Task _initialTask;
 
   @override
   Widget build(BuildContext context) {
@@ -126,24 +127,28 @@ class _EditTaskButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: const Icon(Icons.edit),
-      onPressed: () => _navigateToNewTask(context),
+      onPressed: () => _navigateToUpdateTask(context),
     );
   }
 
-  Future<void> _navigateToNewTask(BuildContext context) async {
-//    final bool successful =
-//    await Navigator.pushNamed(context, NewTaskPage.route.name);
-//
-//    if (successful == null) {
-//      return;
-//    }
-//
-//    final strings = S.of(context);
-//    _showSnackBar(
-//      context,
-//      message: successful
-//          ? strings.newTaskSuccessfulToCreate
-//          : strings.newTaskFailedToCreate,
-//    );
+  Future<void> _navigateToUpdateTask(BuildContext context) async {
+    final bloc = TaskDetailBlocProvider.of(context);
+    final bool successful = await Navigator.pushNamed(
+        context,
+        UpdateTaskPage.route.name,
+        arguments: bloc.task.value,
+    );
+
+    if (successful == null) {
+      return;
+    }
+
+    final strings = S.of(context);
+    showSnackBar(
+      context,
+      message: successful
+          ? strings.editTaskSuccessfulToUpdate
+          : strings.editTaskFailedToUpdate,
+    );
   }
 }
