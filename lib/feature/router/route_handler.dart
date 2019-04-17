@@ -1,12 +1,11 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_todo/feature/router/named_route.dart';
 import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/new/new_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_page.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
-
-import './paged_route.dart';
 
 final _initialRoute = TasksPage.route.copyWith(name: '/');
 // TODO: Comment out if you want to switch initial page on app launched.
