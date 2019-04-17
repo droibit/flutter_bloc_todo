@@ -19,9 +19,11 @@ class TasksBloc implements Bloc {
         _userSettingsRepository = userSettingsRepository,
         _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all),
         _taskSortController = PublishSubject(),
-        _taskCompletedController = PublishSubject() {
+        _taskCompletedController = PublishSubject(),
+        _clearCompletedTasksSubject = PublishSubject() {
     _taskSortController.stream.listen(_onTaskSortChanged);
     _taskCompletedController.listen(_onTaskCompleted);
+    _clearCompletedTasksSubject.listen(_onClearCompletedTasks);
   }
 
   final TaskRepository _taskRepository;
@@ -33,6 +35,8 @@ class TasksBloc implements Bloc {
   final PublishSubject<TaskSort> _taskSortController;
 
   final PublishSubject<TaskCompleted> _taskCompletedController;
+
+  final PublishSubject<void> _clearCompletedTasksSubject;
 
   Observable<TasksView> _tasksViewObservable;
 
@@ -60,11 +64,14 @@ class TasksBloc implements Bloc {
 
   Sink<TaskCompleted> get taskCompleted => _taskCompletedController.sink;
 
+  Sink<void> get clearCompletedTask => _clearCompletedTasksSubject.sink;
+
   @override
   void dispose() {
     _taskFilterSubject.close();
     _taskSortController.close();
     _taskCompletedController.close();
+    _clearCompletedTasksSubject.close();
   }
 
   List<Task> _filterTasks(List<Task> src, TasksFilter filter) {
@@ -112,6 +119,11 @@ class TasksBloc implements Bloc {
     } else {
       _taskRepository.activateTask(toggle.id);
     }
+  }
+
+  Future<void> _onClearCompletedTasks(void _) async {
+    Logger.log('onClearCompletedTasks()');
+    await _taskRepository.clearCompletedTasks();
   }
 }
 

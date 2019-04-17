@@ -109,8 +109,14 @@ class _OverflowPopupMenu extends StatelessWidget {
     Logger.log('onMenuItemSelected(item=$item)');
     switch (item) {
       case _OverflowMenuItem.clearCompletedTasks:
+        _onClearCompletedTaskSelected(context);
         break;
     }
+  }
+
+  void _onClearCompletedTaskSelected(BuildContext context) {
+    final bloc = TasksBlocProvider.of(context);
+    bloc.clearCompletedTask.add(null);
   }
 }
 
