@@ -2,7 +2,6 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/new/new_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
@@ -76,7 +75,6 @@ class _TasksFilterPopupMenu extends StatelessWidget {
 }
 
 enum _OverflowMenuItem {
-  changeTasksSortBy,
   clearCompletedTasks,
 }
 
@@ -88,7 +86,6 @@ class _OverflowPopupMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = S.of(context);
     final items = <_OverflowMenuItem, String>{
-      _OverflowMenuItem.changeTasksSortBy: strings.todoListSortBy,
       _OverflowMenuItem.clearCompletedTasks: strings.todoListClearCompleted,
     };
 
@@ -111,57 +108,8 @@ class _OverflowPopupMenu extends StatelessWidget {
   void _onMenuItemSelected(BuildContext context, _OverflowMenuItem item) {
     Logger.log('onMenuItemSelected(item=$item)');
     switch (item) {
-      case _OverflowMenuItem.changeTasksSortBy:
-        _showSortTasksBottomSheet(context);
-        break;
       case _OverflowMenuItem.clearCompletedTasks:
         break;
-    }
-  }
-
-  Future<void> _showSortTasksBottomSheet(BuildContext context) async {
-    final strings = S.of(context);
-    final items = <SortBy, String>{
-      SortBy.title: strings.todoListSortByTitle,
-      SortBy.created_date: strings.todoListSortByCreatedDate,
-    };
-
-    final bloc = TasksBlocProvider.of(context);
-    final currentTaskSort = bloc.taskSort.value;
-    final selectedSortBy = await showModalBottomSheet<SortBy>(
-      context: context,
-      builder: (_context) {
-        return ListView(
-          shrinkWrap: true,
-          children: <ListTile>[
-            ListTile(
-              title: Text(
-                strings.todoListSortBy,
-                style: TextStyle(
-                  color: Theme.of(_context).primaryColorDark,
-                ),
-              ),
-              onTap: null,
-            ),
-          ]..addAll(
-              items.entries.map((entry) {
-                return ListTile(
-                  title: Text(entry.value),
-                  onTap: () => Navigator.pop(_context, entry.key),
-                  trailing: currentTaskSort.by == entry.key
-                      ? const Icon(Icons.check)
-                      : null,
-                );
-              }),
-            ),
-        );
-      },
-    );
-
-    if (currentTaskSort.by != selectedSortBy) {
-      bloc.changeTaskSort.add(
-        currentTaskSort.copyWith(by: selectedSortBy),
-      );
     }
   }
 }

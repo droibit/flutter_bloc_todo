@@ -148,7 +148,7 @@ class _TaskListHeader extends StatelessWidget {
                         )
                       ],
                     ),
-                    onTap: () => _onTasksSortTap(context, taskSort),
+                    onTap: () => _onTaskSortTap(context),
                   ),
                 ),
               ],
@@ -157,11 +157,6 @@ class _TaskListHeader extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _onTasksSortTap(BuildContext context, TaskSort currentTaskSort) {
-    final bloc = TasksBlocProvider.of(context);
-    bloc.changeTaskSort.add(currentTaskSort.reverseOrder());
   }
 
   String _convertHeaderTitle(BuildContext context, TasksFilter filter) {
@@ -190,6 +185,66 @@ class _TaskListHeader extends StatelessWidget {
 
   IconData _convertSortOrderIcon(Order order) {
     return order == Order.asc ? Icons.arrow_upward : Icons.arrow_downward;
+  }
+
+  Future<void> _onTaskSortTap(BuildContext context) async {
+    final strings = S.of(context);
+    final items = <SortBy, String>{
+      SortBy.title: strings.todoListSortByTitle,
+      SortBy.created_date: strings.todoListSortByCreatedDate,
+    };
+
+    final bloc = TasksBlocProvider.of(context);
+    final selectedSortBy = await showModalBottomSheet<SortBy>(
+      context: context,
+      builder: (_context) {
+        final theme = Theme.of(_context);
+        return ListView(
+          shrinkWrap: true,
+          children: <ListTile>[
+            ListTile(
+              title: Text(
+                strings.todoListSortBy,
+                style: TextStyle(
+                  color: theme.primaryColorDark,
+                ),
+              ),
+              onTap: null,
+            ),
+          ]..addAll(
+              items.entries.map((entry) {
+                final selectedSort = entry.key == taskSort.by;
+                return ListTile(
+                  leading: selectedSort
+                      ? Icon(_convertSortOrderIcon(taskSort.order))
+                      : SizedBox.fromSize(
+                          size: Size.square(theme.iconTheme.size),
+                        ),
+                  title: Text(entry.value),
+                  onTap: () => Navigator.pop(_context, entry.key),
+                  trailing: selectedSort
+                      ? Icon(Icons.check, color: theme.accentColor)
+                      : null,
+                );
+              }),
+            ),
+        );
+      },
+    );
+
+    if (selectedSortBy == null) {
+      return;
+    }
+
+    if (taskSort.by == selectedSortBy) {
+      bloc.changeTaskSort.add(
+        taskSort.reverseOrder(),
+      );
+    } else {
+      bloc.changeTaskSort.add(
+        taskSort.copyWith(by: selectedSortBy),
+      );
+    }
   }
 }
 
