@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
+import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
@@ -79,6 +80,11 @@ class _TaskListView extends StatelessWidget {
 
   void _onTaskItemTap(BuildContext context, Task task) {
     Logger.log('onTaskItemTap(task=${task.title})');
+    Navigator.pushNamed(
+      context,
+      TaskDetailPage.route.name,
+      arguments: task.id,
+    );
   }
 }
 

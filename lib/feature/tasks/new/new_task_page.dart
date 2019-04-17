@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/new/new_task_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
@@ -19,7 +18,7 @@ class NewTaskPage extends StatelessWidget {
     return NewTaskBlocProvider(
       child: Scaffold(
         appBar: AppBar(
-          leading: const BackIconButton(),
+          leading: const CloseButton(),
           title: Text(S.of(context).newTask),
           actions: const <Widget>[
             _CreateTaskActionButton(),

@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).settings),
-          leading: const BackIconButton(),
+          leading: const CloseButton(),
         ),
         body: const _SettingsPageBody(),
       ),
