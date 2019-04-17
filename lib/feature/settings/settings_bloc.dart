@@ -7,17 +7,16 @@ import 'package:rxdart/rxdart.dart';
 class SettingsBloc implements Bloc {
   SettingsBloc({
     @required PackageInfoRepository packageInfoRepository,
-  })  : assert(packageInfoRepository != null),
-        _packageInfoRepository = packageInfoRepository;
+  }) : _packageInfoRepository = packageInfoRepository;
 
   final PackageInfoRepository _packageInfoRepository;
 
-  ValueObservable<PackageInfo> _packageInfoObservable;
+  Observable<PackageInfo> _packageInfoObservable;
 
-  ValueObservable<PackageInfo> get packageInfo {
+  Observable<PackageInfo> get packageInfo {
     _packageInfoObservable ??= Observable(
       Stream.fromFuture(_packageInfoRepository.get()),
-    ).shareValue();
+    );
     return _packageInfoObservable;
   }
 
@@ -25,6 +24,7 @@ class SettingsBloc implements Bloc {
   void dispose() {}
 }
 
+@immutable
 class SettingsBlocProvider extends BlocProvider<SettingsBloc> {
   SettingsBlocProvider({
     @required Widget child,

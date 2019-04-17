@@ -25,7 +25,7 @@ class SettingsPage extends StatelessWidget {
           title: Text(S.of(context).settings),
           leading: const BackIconButton(),
         ),
-        body: _SettingsPageBody(),
+        body: const _SettingsPageBody(),
       ),
     );
   }
@@ -33,6 +33,8 @@ class SettingsPage extends StatelessWidget {
 
 @immutable
 class _SettingsPageBody extends StatelessWidget {
+  const _SettingsPageBody({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ListView(

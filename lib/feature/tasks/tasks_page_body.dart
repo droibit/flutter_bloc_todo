@@ -41,15 +41,61 @@ class _TaskListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _buildHeader(context, tasksView.taskSort),
+        _TaskListHeader(
+          tasksFilter: tasksView.filter,
+          taskSort: tasksView.taskSort,
+        ),
         Expanded(
-          child: _buildTaskList(context, tasksView.tasks),
+          child: ListView.separated(
+            itemCount: tasksView.tasks.length,
+            itemBuilder: (_context, index) {
+              final task = tasksView.tasks[index];
+              return ListTile(
+                key: ObjectKey(task),
+                leading: Checkbox(
+                  value: task.completed,
+                  onChanged: (checked) =>
+                      _onTaskItemChecked(context, task, checked),
+                ),
+                title: Text(
+                  task.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () => _onTaskItemTap(context, task),
+              );
+            },
+            separatorBuilder: (_, __) => const Divider(),
+          ),
         )
       ],
     );
   }
 
-  Widget _buildHeader(BuildContext context, TaskSort taskSort) {
+  void _onTaskItemChecked(BuildContext context, Task task, bool completed) {
+    final bloc = TasksBlocProvider.of(context);
+    bloc.taskCompleted.add(TaskCompleted(id: task.id, completed: completed));
+  }
+
+  void _onTaskItemTap(BuildContext context, Task task) {
+    Logger.log('onTaskItemTap(task=${task.title})');
+  }
+}
+
+@immutable
+class _TaskListHeader extends StatelessWidget {
+  const _TaskListHeader({
+    Key key,
+    @required this.tasksFilter,
+    @required this.taskSort,
+  }) : super(key: key);
+
+  final TasksFilter tasksFilter;
+
+  final TaskSort taskSort;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Material(
       color: theme.primaryColor,
@@ -70,7 +116,7 @@ class _TaskListView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  _convertHeaderTitle(context, tasksView.filter),
+                  _convertHeaderTitle(context, tasksFilter),
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: theme.textTheme.subhead.fontSize,
@@ -144,38 +190,6 @@ class _TaskListView extends StatelessWidget {
 
   IconData _convertSortOrderIcon(Order order) {
     return order == Order.asc ? Icons.arrow_upward : Icons.arrow_downward;
-  }
-
-  Widget _buildTaskList(BuildContext context, List<Task> tasks) {
-    return ListView.separated(
-      itemCount: tasks.length,
-      itemBuilder: (_context, index) {
-        final task = tasks[index];
-        return ListTile(
-          key: ObjectKey(task),
-          leading: Checkbox(
-            value: task.completed,
-            onChanged: (checked) => _onTaskItemChecked(context, task, checked),
-          ),
-          title: Text(
-            task.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          onTap: () => _onTaskItemTap(context, task),
-        );
-      },
-      separatorBuilder: (_, __) => const Divider(),
-    );
-  }
-
-  void _onTaskItemChecked(BuildContext context, Task task, bool completed) {
-    final bloc = TasksBlocProvider.of(context);
-    bloc.taskCompleted.add(TaskCompleted(id: task.id, completed: completed));
-  }
-
-  void _onTaskItemTap(BuildContext context, Task task) {
-    Logger.log('onTaskItemTap(task=${task.title})');
   }
 }
 

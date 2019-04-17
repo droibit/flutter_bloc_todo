@@ -5,7 +5,7 @@ import 'package:flutter_bloc_todo/di/di.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
-typedef int _Compare<T>(T a, T b);
+typedef _Compare<T> = int Function(T a, T b);
 
 enum TasksFilter { all, active, completed }
 
@@ -115,24 +115,6 @@ class TasksBloc implements Bloc {
   }
 }
 
-class TasksBlocProvider extends BlocProvider<TasksBloc> {
-  TasksBlocProvider({
-    @required Widget child,
-  })  : assert(child != null),
-        super(
-          creator: (context, _) {
-            final deps = DependencyProvider.of(context);
-            return TasksBloc(
-              taskRepository: deps.taskRepository,
-              userSettingsRepository: deps.userSettingsRepository,
-            );
-          },
-          child: child,
-        );
-
-  static TasksBloc of(BuildContext context) => BlocProvider.of(context);
-}
-
 @immutable
 class TasksView {
   const TasksView({
@@ -156,4 +138,23 @@ class TaskCompleted {
 
   final String id;
   final bool completed;
+}
+
+@immutable
+class TasksBlocProvider extends BlocProvider<TasksBloc> {
+  TasksBlocProvider({
+    @required Widget child,
+  })  : assert(child != null),
+        super(
+          creator: (context, _) {
+            final deps = DependencyProvider.of(context);
+            return TasksBloc(
+              taskRepository: deps.taskRepository,
+              userSettingsRepository: deps.userSettingsRepository,
+            );
+          },
+          child: child,
+        );
+
+  static TasksBloc of(BuildContext context) => BlocProvider.of(context);
 }

@@ -7,8 +7,7 @@ import 'package:flutter_bloc_todo/generated/i18n.dart';
 class NewTaskPage extends StatelessWidget {
   static final route = NamedRoute(
     '/tasks/new',
-        (settings) =>
-        MaterialPageRoute<bool>(
+    (settings) => MaterialPageRoute<bool>(
           builder: (_) => NewTaskPage(),
           settings: settings,
           fullscreenDialog: true,
@@ -21,20 +20,20 @@ class NewTaskPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: const BackIconButton(),
-          title: Text(S
-              .of(context)
-              .newTask),
+          title: Text(S.of(context).newTask),
           actions: const <Widget>[
             _CreateTaskActionButton(),
           ],
         ),
-        body: _NewTaskPageBody(),
+        body: const _NewTaskPageBody(),
       ),
     );
   }
 }
 
 class _NewTaskPageBody extends StatefulWidget {
+  const _NewTaskPageBody({Key key}) : super(key: key);
+
   @override
   State createState() => _NewTaskPageBodyState();
 }

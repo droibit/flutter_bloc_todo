@@ -64,6 +64,7 @@ class NewTaskBloc extends Bloc {
   }
 }
 
+@immutable
 class NewTaskBlocProvider extends BlocProvider<NewTaskBloc> {
   NewTaskBlocProvider({
     @required Widget child,

@@ -10,7 +10,6 @@ import 'package:flutter_bloc_todo/feature/tasks/tasks_page_body.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 
-
 class TasksPage extends StatelessWidget {
   static final route = NamedRoute(
     '/tasks',
