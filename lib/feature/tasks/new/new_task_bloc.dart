@@ -16,42 +16,41 @@ class TaskEdit {
   bool get isCompleted => title?.isNotEmpty ?? false;
 }
 
+@immutable
 class NewTaskBloc extends Bloc {
   NewTaskBloc({
     @required TaskRepository taskRepository,
   })  : _taskRepository = taskRepository,
         _editTaskSubject = BehaviorSubject.seeded(const TaskEdit()),
-        _submitTaskController = PublishSubject(),
-        _submitResultController = PublishSubject() {
-    _submitTaskController
-        .map((_) => _editTaskSubject.value)
-        .listen(_onSubmitTask);
+        _submitTaskSubject = PublishSubject(),
+        _submitResultSubject = PublishSubject() {
+    _submitTaskSubject.map((_) => _editTaskSubject.value).listen(_onSubmitTask);
   }
 
   final TaskRepository _taskRepository;
 
   final BehaviorSubject<TaskEdit> _editTaskSubject;
 
-  final PublishSubject<void> _submitTaskController;
+  final PublishSubject<void> _submitTaskSubject;
 
-  final PublishSubject<bool> _submitResultController;
+  final PublishSubject<bool> _submitResultSubject;
 
   Observable<bool> get taskEditCompleted {
-    return _editTaskSubject.map((editTask) => editTask.isCompleted);
+    return _editTaskSubject.map((editTask) => editTask.isCompleted).distinct();
   }
 
   ValueObservable<TaskEdit> get task => _editTaskSubject.stream;
 
-  Observable<bool> get taskSubmitResult => _submitResultController.stream;
+  Observable<bool> get taskSubmitResult => _submitResultSubject.stream;
 
   Sink<TaskEdit> get taskEdit => _editTaskSubject.sink;
 
-  Sink<void> get taskSubmit => _submitTaskController.sink;
+  Sink<void> get taskSubmit => _submitTaskSubject.sink;
 
   @override
   void dispose() {
     _editTaskSubject.close();
-    _submitTaskController.close();
+    _submitTaskSubject.close();
   }
 
   Future<void> _onSubmitTask(TaskEdit taskEdit) async {
@@ -62,7 +61,7 @@ class NewTaskBloc extends Bloc {
       title: taskEdit.title,
       description: taskEdit.description,
     );
-    _submitResultController.add(successful);
+    _submitResultSubject.add(successful);
   }
 }
 
@@ -74,9 +73,7 @@ class NewTaskBlocProvider extends BlocProvider<NewTaskBloc> {
         super(
           creator: (context, _) {
             final deps = DependencyProvider.of(context);
-            return NewTaskBloc(
-              taskRepository: deps.taskRepository,
-            );
+            return NewTaskBloc(taskRepository: deps.taskRepository);
           },
           child: child,
         );

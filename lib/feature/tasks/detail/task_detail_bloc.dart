@@ -6,6 +6,7 @@ import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
+@immutable
 class TaskDetailBloc implements Bloc {
   TaskDetailBloc({
     @required Task initialTask,

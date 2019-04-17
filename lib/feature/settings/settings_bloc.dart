@@ -4,20 +4,18 @@ import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
 import 'package:rxdart/rxdart.dart';
 
+@immutable
 class SettingsBloc implements Bloc {
-  SettingsBloc({
+  const SettingsBloc({
     @required PackageInfoRepository packageInfoRepository,
   }) : _packageInfoRepository = packageInfoRepository;
 
   final PackageInfoRepository _packageInfoRepository;
 
-  Observable<PackageInfo> _packageInfoObservable;
-
   Observable<PackageInfo> get packageInfo {
-    _packageInfoObservable ??= Observable(
+    return Observable(
       Stream.fromFuture(_packageInfoRepository.get()),
     );
-    return _packageInfoObservable;
   }
 
   @override

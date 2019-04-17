@@ -10,6 +10,7 @@ typedef _Compare<T> = int Function(T a, T b);
 
 enum TasksFilter { all, active, completed }
 
+@immutable
 class TasksBloc implements Bloc {
   TasksBloc({
     @required TaskRepository taskRepository,
@@ -19,11 +20,11 @@ class TasksBloc implements Bloc {
         _taskRepository = taskRepository,
         _userSettingsRepository = userSettingsRepository,
         _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all),
-        _taskSortController = PublishSubject(),
-        _taskCompletedController = PublishSubject(),
+        _taskSortSubject = PublishSubject(),
+        _taskCompletedSubject = PublishSubject(),
         _clearCompletedTasksSubject = PublishSubject() {
-    _taskSortController.stream.listen(_onTaskSortChanged);
-    _taskCompletedController.listen(_onTaskCompleted);
+    _taskSortSubject.stream.listen(_onTaskSortChanged);
+    _taskCompletedSubject.listen(_onTaskCompleted);
     _clearCompletedTasksSubject.listen(_onClearCompletedTasks);
   }
 
@@ -33,16 +34,14 @@ class TasksBloc implements Bloc {
 
   final BehaviorSubject<TasksFilter> _taskFilterSubject;
 
-  final PublishSubject<TaskSort> _taskSortController;
+  final PublishSubject<TaskSort> _taskSortSubject;
 
-  final PublishSubject<TaskCompleted> _taskCompletedController;
+  final PublishSubject<TaskCompleted> _taskCompletedSubject;
 
   final PublishSubject<void> _clearCompletedTasksSubject;
 
-  Observable<TasksView> _tasksViewObservable;
-
   Observable<TasksView> get tasksView {
-    _tasksViewObservable ??= Observable.combineLatest3(
+    return Observable.combineLatest3(
       _taskRepository.tasks,
       _taskFilterSubject,
       _userSettingsRepository.taskSort,
@@ -54,22 +53,21 @@ class TasksBloc implements Bloc {
         );
       },
     );
-    return _tasksViewObservable;
   }
 
   Sink<TasksFilter> get changeTaskFilter => _taskFilterSubject.sink;
 
-  Sink<TaskSort> get changeTaskSort => _taskSortController.sink;
+  Sink<TaskSort> get changeTaskSort => _taskSortSubject.sink;
 
-  Sink<TaskCompleted> get taskCompleted => _taskCompletedController.sink;
+  Sink<TaskCompleted> get taskCompleted => _taskCompletedSubject.sink;
 
   Sink<void> get clearCompletedTask => _clearCompletedTasksSubject.sink;
 
   @override
   void dispose() {
     _taskFilterSubject.close();
-    _taskSortController.close();
-    _taskCompletedController.close();
+    _taskSortSubject.close();
+    _taskCompletedSubject.close();
     _clearCompletedTasksSubject.close();
   }
 
