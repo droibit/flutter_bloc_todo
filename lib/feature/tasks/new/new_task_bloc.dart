@@ -23,14 +23,16 @@ class NewTaskBloc extends Bloc {
         _editTaskSubject = BehaviorSubject.seeded(const TaskEdit()),
         _submitTaskController = PublishSubject(),
         _submitResultController = PublishSubject() {
-    _submitTaskController.listen(_onSubmitTask);
+    _submitTaskController
+        .map((_) => _editTaskSubject.value)
+        .listen(_onSubmitTask);
   }
 
   final TaskRepository _taskRepository;
 
   final BehaviorSubject<TaskEdit> _editTaskSubject;
 
-  final PublishSubject<TaskEdit> _submitTaskController;
+  final PublishSubject<void> _submitTaskController;
 
   final PublishSubject<bool> _submitResultController;
 
@@ -44,7 +46,7 @@ class NewTaskBloc extends Bloc {
 
   Sink<TaskEdit> get taskEdit => _editTaskSubject.sink;
 
-  Sink<TaskEdit> get taskSubmit => _submitTaskController.sink;
+  Sink<void> get taskSubmit => _submitTaskController.sink;
 
   @override
   void dispose() {

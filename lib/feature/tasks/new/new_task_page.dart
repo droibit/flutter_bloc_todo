@@ -145,6 +145,6 @@ class _CreateTaskActionButton extends StatelessWidget {
   }
 
   void _onDoneButtonPressed(NewTaskBloc bloc) {
-    bloc.taskSubmit.add(bloc.task.value);
+    bloc.taskSubmit.add(null);
   }
 }
