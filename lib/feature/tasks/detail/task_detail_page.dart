@@ -7,6 +7,7 @@ import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 @immutable
 class TaskDetailPage extends StatelessWidget {

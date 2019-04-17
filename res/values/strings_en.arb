@@ -22,6 +22,7 @@
   "editTaskTitleValidationError": "Title is required.",
   "editTaskDescLabel": "Description",
   "editTaskDescHint": "Enter your TO-DO here.",
+  "editTaskEmptyTitleError": "Fill TO-DO's title",
   "statistics": "Statistics",
   "statisticsActiveTasks": "Active TO-DOs:",
   "statisticsCompletedTasks": "Completed TO-DOs:",

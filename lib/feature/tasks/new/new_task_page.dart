@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_todo/feature/_widgets/toast.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/new/new_task_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
@@ -135,15 +136,17 @@ class _CreateTaskActionButton extends StatelessWidget {
         final editCompleted = snapshot.data;
         return IconButton(
           icon: const Icon(Icons.done),
-          onPressed: (editCompleted ?? false)
-              ? () => _onDoneButtonPressed(bloc)
-              : null,
+          onPressed: () {
+            if (editCompleted ?? false) {
+              bloc.taskSubmit.add(null);
+            } else {
+              showShortToast(
+                msg: S.of(context).editTaskEmptyTitleError,
+              );
+            }
+          },
         );
       },
     );
-  }
-
-  void _onDoneButtonPressed(NewTaskBloc bloc) {
-    bloc.taskSubmit.add(null);
   }
 }
