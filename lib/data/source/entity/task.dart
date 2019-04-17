@@ -32,6 +32,8 @@ class Task {
 
   bool get isActive => !completed;
 
+  bool get hasDescription => description.trim().isNotEmpty;
+
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   Task copyWith({

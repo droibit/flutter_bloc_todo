@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
+import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
@@ -75,7 +76,9 @@ class _TaskListView extends StatelessWidget {
 
   void _onTaskItemChecked(BuildContext context, Task task, bool completed) {
     final bloc = TasksBlocProvider.of(context);
-    bloc.taskCompleted.add(TaskCompleted(id: task.id, completed: completed));
+    bloc.taskCompleted.add(
+      TaskCompleted(id: task.id, completed: completed),
+    );
   }
 
   void _onTaskItemTap(BuildContext context, Task task) {
@@ -83,7 +86,7 @@ class _TaskListView extends StatelessWidget {
     Navigator.pushNamed(
       context,
       TaskDetailPage.route.name,
-      arguments: task.id,
+      arguments: task,
     );
   }
 }

@@ -57,8 +57,6 @@ class TasksBloc implements Bloc {
     return _tasksViewObservable;
   }
 
-  ValueObservable<TaskSort> get taskSort => _userSettingsRepository.taskSort;
-
   Sink<TasksFilter> get changeTaskFilter => _taskFilterSubject.sink;
 
   Sink<TaskSort> get changeTaskSort => _taskSortController.sink;
