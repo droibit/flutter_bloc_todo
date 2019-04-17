@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/new/new_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
@@ -141,17 +142,11 @@ class _NewTaskButton extends StatelessWidget {
     }
 
     final strings = S.of(context);
-    _showSnackBar(
+    showSnackBar(
       context,
       message: successful
           ? strings.newTaskSuccessfulToCreate
           : strings.newTaskFailedToCreate,
     );
   }
-}
-
-void _showSnackBar(BuildContext context, {@required String message}) {
-  Scaffold.of(context).showSnackBar(
-    SnackBar(content: Text(message)),
-  );
 }

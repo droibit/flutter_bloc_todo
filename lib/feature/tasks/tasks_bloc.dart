@@ -2,6 +2,7 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
+import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -138,18 +139,6 @@ class TasksView {
   final List<Task> tasks;
   final TasksFilter filter;
   final TaskSort taskSort;
-}
-
-@immutable
-class TaskCompleted {
-  const TaskCompleted({
-    @required this.id,
-    @required this.completed,
-  })  : assert(id != null),
-        assert(completed != null);
-
-  final String id;
-  final bool completed;
 }
 
 @immutable
