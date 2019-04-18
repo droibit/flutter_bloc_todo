@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_bloc.dart';
-import 'package:flutter_bloc_todo/feature/tasks/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:intl/intl.dart';
 

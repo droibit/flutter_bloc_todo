@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/editable_task_bloc.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_edit.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/editable_task_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
 typedef EditableTaskBlocProvider = EditableTaskBloc Function(

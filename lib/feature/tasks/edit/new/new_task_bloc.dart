@@ -4,8 +4,8 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/editable_task_bloc.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_edit.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/editable_task_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit.dart';
 
 @immutable
 class NewTaskBloc extends EditableTaskBloc {

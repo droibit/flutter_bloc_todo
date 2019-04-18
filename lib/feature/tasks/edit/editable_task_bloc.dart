@@ -1,5 +1,5 @@
 import 'package:bloc_provider/bloc_provider.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_edit.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 

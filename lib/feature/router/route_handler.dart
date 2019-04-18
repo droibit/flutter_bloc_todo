@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/router/named_route.dart';
 import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
-import 'package:flutter_bloc_todo/feature/tasks/new/new_task_page.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_page.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/new/new_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_page.dart';
-import 'package:flutter_bloc_todo/feature/tasks/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 
 final _initialRoute = TasksPage.route.copyWith(name: '/');
