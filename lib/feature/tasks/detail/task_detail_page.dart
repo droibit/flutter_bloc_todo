@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/router/router.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
+import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_bloc.dart';
 import 'package:flutter_bloc_todo/feature/tasks/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
@@ -134,9 +134,9 @@ class _EditTaskButton extends StatelessWidget {
   Future<void> _navigateToUpdateTask(BuildContext context) async {
     final bloc = TaskDetailBlocProvider.of(context);
     final bool successful = await Navigator.pushNamed(
-        context,
-        UpdateTaskPage.route.name,
-        arguments: bloc.task.value,
+      context,
+      UpdateTaskPage.route.name,
+      arguments: bloc.task.value,
     );
 
     if (successful == null) {

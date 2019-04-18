@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
+import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';

@@ -2,7 +2,7 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/_common/task_completed.dart';
+import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
