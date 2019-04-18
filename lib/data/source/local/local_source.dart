@@ -5,8 +5,10 @@ import 'package:flutter_bloc_todo/data/source/entity/task.dart';
 import 'package:flutter_bloc_todo/data/source/entity/task_sort.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _KEY_TASK_SORT = 'task_sort';
-const _KEY_TASKS = 'tasks';
+@visibleForTesting
+const KEY_TASK_SORT = 'task_sort';
+@visibleForTesting
+const KEY_TASKS = 'tasks';
 
 class LocalSource {
   LocalSource({@required SharedPreferences sharedPrefs})
@@ -16,7 +18,7 @@ class LocalSource {
   final SharedPreferences _sharedPrefs;
 
   List<Task> loadTasks() {
-    final json = _sharedPrefs.getString(_KEY_TASKS);
+    final json = _sharedPrefs.getString(KEY_TASKS);
     if (json == null) {
       return [];
     }
@@ -28,11 +30,11 @@ class LocalSource {
 
   Future<bool> storeTasks(List<Task> tasks) {
     final json = jsonEncode(tasks);
-    return _sharedPrefs.setString(_KEY_TASKS, json);
+    return _sharedPrefs.setString(KEY_TASKS, json);
   }
 
   TaskSort loadTaskSort() {
-    final json = _sharedPrefs.getString(_KEY_TASK_SORT);
+    final json = _sharedPrefs.getString(KEY_TASK_SORT);
     if (json == null) {
       return null;
     }
@@ -41,6 +43,6 @@ class LocalSource {
 
   Future<bool> storeTasksSort(TaskSort sort) async {
     final json = jsonEncode(sort.toJson());
-    return _sharedPrefs.setString(_KEY_TASK_SORT, json);
+    return _sharedPrefs.setString(KEY_TASK_SORT, json);
   }
 }

@@ -3,7 +3,8 @@ import 'package:flutter_bloc_todo/data/source/source.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
-const _defaultTaskSort = TaskSort(SortBy.title, Order.asc);
+@visibleForTesting
+const defaultTaskSort = TaskSort(SortBy.title, Order.asc);
 
 class UserSettingsRepository {
   UserSettingsRepository({
@@ -20,17 +21,18 @@ class UserSettingsRepository {
     return _taskSortSubject.stream;
   }
 
-  Future<void> storeTasksSort(TaskSort sort) async {
+  Future<bool> storeTasksSort(TaskSort sort) async {
     final successful = await _localSource.storeTasksSort(sort);
     if (successful) {
       _ensureTaskSortSubject();
       _taskSortSubject.add(sort);
     }
     Logger.log('storeTasksSort(result=$successful');
+    return successful;
   }
 
   void _ensureTaskSortSubject({bool needLoad = false}) {
     _taskSortSubject ??= BehaviorSubject.seeded(
-        needLoad ? (_localSource.loadTaskSort() ?? _defaultTaskSort) : null);
+        needLoad ? (_localSource.loadTaskSort() ?? defaultTaskSort) : null);
   }
 }
