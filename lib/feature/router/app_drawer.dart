@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
+import 'package:flutter_bloc_todo/feature/statistics/statistics_page.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
 enum DrawerNavigation {
@@ -128,6 +129,7 @@ class AppDrawer extends StatelessWidget {
         Navigator.pop(context);
         break;
       case DrawerNavigation.statistics:
+        Navigator.pushNamed(context, StatisticsPage.route.name);
         break;
       case DrawerNavigation.settings:
         Navigator.pushNamed(context, SettingsPage.route.name);

@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/router/named_route.dart';
 import 'package:flutter_bloc_todo/feature/settings/settings_page.dart';
+import 'package:flutter_bloc_todo/feature/statistics/statistics_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/new/new_task_page.dart';
@@ -29,6 +30,7 @@ final _routes = <NamedRoute>[
   NewTaskPage.route,
   TaskDetailPage.route,
   UpdateTaskPage.route,
+  StatisticsPage.route,
   SettingsPage.route,
 ];
 
