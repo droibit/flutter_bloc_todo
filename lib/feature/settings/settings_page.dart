@@ -9,10 +9,9 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 class SettingsPage extends StatelessWidget {
   static final route = NamedRoute(
     '/settings',
-    (settings) => MaterialPageRoute<void>(
+    (settings) => FadePageRoute<void>(
           builder: (_) => SettingsPage(),
           settings: settings,
-          fullscreenDialog: true,
         ),
   );
 
@@ -22,7 +21,7 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).settings),
-          leading: const CloseButton(),
+          leading: const BackButton(),
         ),
         body: const _SettingsPageBody(),
       ),
