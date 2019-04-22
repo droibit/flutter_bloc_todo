@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/new/new_task_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc_event.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_page_body.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_state.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/router/router.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
@@ -71,7 +73,7 @@ class _TasksFilterPopupMenu extends StatelessWidget {
   void _onMenuItemSelected(BuildContext context, TasksFilter newFilter) {
     Logger.log('onMenuItemSelected(item=$newFilter)');
     final bloc = TasksBlocProvider.of(context);
-    bloc.changeTaskFilter.add(newFilter);
+    bloc.dispatch(ChangeTasksFilterEvent(newFilter));
   }
 }
 
@@ -117,7 +119,7 @@ class _OverflowPopupMenu extends StatelessWidget {
 
   void _onClearCompletedTaskSelected(BuildContext context) {
     final bloc = TasksBlocProvider.of(context);
-    bloc.clearCompletedTask.add(null);
+    bloc.dispatch(ClearCompletedTasksEvent());
   }
 }
 

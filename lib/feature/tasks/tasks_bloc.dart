@@ -2,16 +2,16 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
+import 'package:flutter_bloc_todo/feature/bloc_base.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc_event.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_state.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef _Compare<T> = int Function(T a, T b);
 
-enum TasksFilter { all, active, completed }
-
 @immutable
-class TasksBloc implements Bloc {
+class TasksBloc extends SimpleBlocBase {
   TasksBloc({
     @required TaskRepository taskRepository,
     @required UserSettingsRepository userSettingsRepository,
@@ -19,14 +19,7 @@ class TasksBloc implements Bloc {
         assert(userSettingsRepository != null),
         _taskRepository = taskRepository,
         _userSettingsRepository = userSettingsRepository,
-        _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all),
-        _taskSortSubject = PublishSubject(),
-        _taskCompletedSubject = PublishSubject(),
-        _clearCompletedTasksSubject = PublishSubject() {
-    _taskSortSubject.stream.listen(_onTaskSortChanged);
-    _taskCompletedSubject.listen(_onTaskCompleted);
-    _clearCompletedTasksSubject.listen(_onClearCompletedTasks);
-  }
+        _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all);
 
   final TaskRepository _taskRepository;
 
@@ -34,41 +27,19 @@ class TasksBloc implements Bloc {
 
   final BehaviorSubject<TasksFilter> _taskFilterSubject;
 
-  final PublishSubject<TaskSort> _taskSortSubject;
-
-  final PublishSubject<TaskCompleted> _taskCompletedSubject;
-
-  final PublishSubject<void> _clearCompletedTasksSubject;
-
-  Observable<TasksView> get tasksView {
+  Observable<TasksState> get tasksState {
     return Observable.combineLatest3(
       _taskRepository.tasks,
       _taskFilterSubject,
       _userSettingsRepository.taskSort,
       (List<Task> tasks, TasksFilter filter, TaskSort taskSort) {
-        return TasksView(
+        return TasksState(
           tasks: _filterTasks(tasks, filter)..sort(_resolveCompare(taskSort)),
           filter: filter,
           taskSort: taskSort,
         );
       },
     );
-  }
-
-  Sink<TasksFilter> get changeTaskFilter => _taskFilterSubject.sink;
-
-  Sink<TaskSort> get changeTaskSort => _taskSortSubject.sink;
-
-  Sink<TaskCompleted> get taskCompleted => _taskCompletedSubject.sink;
-
-  Sink<void> get clearCompletedTask => _clearCompletedTasksSubject.sink;
-
-  @override
-  void dispose() {
-    _taskFilterSubject.close();
-    _taskSortSubject.close();
-    _taskCompletedSubject.close();
-    _clearCompletedTasksSubject.close();
   }
 
   List<Task> _filterTasks(List<Task> src, TasksFilter filter) {
@@ -99,42 +70,54 @@ class TasksBloc implements Bloc {
     }
   }
 
-  void _onTaskSortChanged(TaskSort newTaskSort) {
-    Logger.log('onTaskSortChanged(newTaskSort=$newTaskSort})');
-
-    if (newTaskSort != _userSettingsRepository.taskSort.value) {
-      _userSettingsRepository.storeTasksSort(newTaskSort);
-    }
-  }
-
-  void _onTaskCompleted(TaskCompleted toggle) {
-    Logger.log(
-        '_onTaskCompletedToggled(task=${toggle.id}, completed=${toggle.completed})');
-
-    if (toggle.completed) {
-      _taskRepository.completeTask(toggle.id);
+  @override
+  void onHandleEvent(BlocEvent event) {
+    if (event is ChangeTasksFilterEvent) {
+      _onChangeTasksFilterEvent(event);
+    } else if (event is ChangeTaskSortEvent) {
+      _onChangeTaskSortEvent(event);
+    } else if (event is ChangeTaskCompletedEvent) {
+      _onChangeTaskCompletedEvent(event);
+    } else if (event is ClearCompletedTasksEvent) {
+      _onClearCompletedTasksEvent(event);
     } else {
-      _taskRepository.activateTask(toggle.id);
+      throw ArgumentError('Unknown event: ${event.runtimeType}');
     }
   }
 
-  Future<void> _onClearCompletedTasks(void _) async {
-    Logger.log('onClearCompletedTasks()');
-    await _taskRepository.clearCompletedTasks();
+  void _onChangeTasksFilterEvent(ChangeTasksFilterEvent event) {
+    Logger.log('onChangeTasksFilterEvent(filter=${event.filter})');
+    _taskFilterSubject.add(event.filter);
   }
-}
 
-@immutable
-class TasksView {
-  const TasksView({
-    @required this.tasks,
-    @required this.filter,
-    @required this.taskSort,
-  });
+  void _onChangeTaskSortEvent(ChangeTaskSortEvent event) {
+    Logger.log('onChangeTaskSortEvent(taskSort=${event.taskSort})');
 
-  final List<Task> tasks;
-  final TasksFilter filter;
-  final TaskSort taskSort;
+    if (event.taskSort != _userSettingsRepository.taskSort.value) {
+      _userSettingsRepository.storeTasksSort(event.taskSort);
+    }
+  }
+
+  void _onChangeTaskCompletedEvent(ChangeTaskCompletedEvent event) {
+    Logger.log(
+        'onChangeTaskCompletedEvent(task=${event.id}, completed=${event.completed})');
+    if (event.completed) {
+      _taskRepository.completeTask(event.id);
+    } else {
+      _taskRepository.activateTask(event.id);
+    }
+  }
+
+  void _onClearCompletedTasksEvent(ClearCompletedTasksEvent event) {
+    Logger.log('onClearCompletedTasksEvent()');
+    _taskRepository.clearCompletedTasks();
+  }
+
+  @override
+  void dispose() {
+    _taskFilterSubject.close();
+    super.dispose();
+  }
 }
 
 @immutable

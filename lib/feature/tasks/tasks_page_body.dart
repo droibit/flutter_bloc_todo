@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
-import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
 import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_page.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc_event.dart';
+import 'package:flutter_bloc_todo/feature/tasks/tasks_state.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 
@@ -13,18 +14,18 @@ class TasksPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = TasksBlocProvider.of(context);
-    return StreamBuilder<TasksView>(
-      stream: bloc.tasksView,
+    return StreamBuilder<TasksState>(
+      stream: bloc.tasksState,
       builder: (_context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: const CircularProgressIndicator());
         }
 
-        final view = snapshot.data;
-        if (view.tasks.isEmpty) {
+        final state = snapshot.data;
+        if (state.tasks.isEmpty) {
           return const _EmptyView();
         }
-        return _TaskListView(tasksView: view);
+        return _TaskListView(state: state);
       },
     );
   }
@@ -34,24 +35,24 @@ class TasksPageBody extends StatelessWidget {
 class _TaskListView extends StatelessWidget {
   const _TaskListView({
     Key key,
-    this.tasksView,
+    this.state,
   }) : super(key: key);
 
-  final TasksView tasksView;
+  final TasksState state;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         _TaskListHeader(
-          tasksFilter: tasksView.filter,
-          taskSort: tasksView.taskSort,
+          tasksFilter: state.filter,
+          taskSort: state.taskSort,
         ),
         Expanded(
           child: ListView.separated(
-            itemCount: tasksView.tasks.length,
+            itemCount: state.tasks.length,
             itemBuilder: (_context, index) {
-              final task = tasksView.tasks[index];
+              final task = state.tasks[index];
               return ListTile(
                 key: ObjectKey(task),
                 leading: Checkbox(
@@ -76,9 +77,7 @@ class _TaskListView extends StatelessWidget {
 
   void _onTaskItemChecked(BuildContext context, Task task, bool completed) {
     final bloc = TasksBlocProvider.of(context);
-    bloc.taskCompleted.add(
-      TaskCompleted(id: task.id, completed: completed),
-    );
+    bloc.dispatch(ChangeTaskCompletedEvent(id: task.id, completed: completed));
   }
 
   void _onTaskItemTap(BuildContext context, Task task) {
@@ -245,15 +244,13 @@ class _TaskListHeader extends StatelessWidget {
       return;
     }
 
+    TaskSort newTaskSort;
     if (taskSort.by == selectedSortBy) {
-      bloc.changeTaskSort.add(
-        taskSort.reverseOrder(),
-      );
+      newTaskSort = taskSort.reverseOrder();
     } else {
-      bloc.changeTaskSort.add(
-        taskSort.copyWith(by: selectedSortBy),
-      );
+      newTaskSort = taskSort.copyWith(by: selectedSortBy);
     }
+    bloc.dispatch(ChangeTaskSortEvent(newTaskSort));
   }
 }
 
