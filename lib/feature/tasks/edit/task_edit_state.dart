@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
 
 @immutable
-class TaskEdit {
-  const TaskEdit({this.title, this.description = ''});
+class TaskEditState {
+  const TaskEditState({this.title, this.description = ''});
 
   final String title;
   final String description;

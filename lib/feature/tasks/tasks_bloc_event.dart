@@ -32,9 +32,11 @@ class ChangeTaskCompletedEvent implements BlocEvent {
 @immutable
 class ClearCompletedTasksEvent implements BlocEvent {
   factory ClearCompletedTasksEvent() {
-    _instance ??= ClearCompletedTasksEvent();
+    _instance ??= const ClearCompletedTasksEvent._();
     return _instance;
   }
+
+  const ClearCompletedTasksEvent._();
 
   static ClearCompletedTasksEvent _instance;
 }

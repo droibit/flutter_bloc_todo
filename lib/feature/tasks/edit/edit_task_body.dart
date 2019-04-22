@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/editable_task_bloc.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_base.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_event.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit_state.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
-typedef EditableTaskBlocProvider = EditableTaskBloc Function(
+typedef EditableTaskBlocProvider = EditTaskBlocBase Function(
     BuildContext context);
 
 class EditTaskBody extends StatefulWidget {
@@ -30,8 +31,8 @@ class _EditTaskBodyState extends State<EditTaskBody> {
 
     final bloc = widget._blocProvider(context);
     final _onEditText = () {
-      bloc.taskEdit.add(
-        TaskEdit(
+      bloc.dispatch(
+        EditTaskEvent(
           title: _titleController.text,
           description: _descriptionController.text,
         ),
@@ -39,10 +40,10 @@ class _EditTaskBodyState extends State<EditTaskBody> {
     };
 
     _titleController = TextEditingController(
-      text: bloc.task.value.title,
+      text: bloc.taskState.value.title,
     );
     _descriptionController = TextEditingController(
-      text: bloc.task.value.description,
+      text: bloc.taskState.value.description,
     );
 
     _titleController.addListener(_onEditText);

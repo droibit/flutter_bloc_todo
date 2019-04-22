@@ -4,20 +4,20 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/editable_task_bloc.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_base.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit_state.dart';
 
 @immutable
-class NewTaskBloc extends EditableTaskBloc {
+class NewTaskBloc extends EditTaskBlocBase {
   NewTaskBloc({
     @required TaskRepository taskRepository,
   })  : _taskRepository = taskRepository,
-        super(initialTaskEdit: const TaskEdit());
+        super(initialState: const TaskEditState());
 
   final TaskRepository _taskRepository;
 
   @override
-  Future<bool> submitTask(TaskEdit taskEdit) {
+  Future<bool> submitTask(TaskEditState taskEdit) {
     return _taskRepository.createTask(
       title: taskEdit.title,
       description: taskEdit.description,

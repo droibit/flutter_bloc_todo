@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_event.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_body.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/new/new_task_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
@@ -49,7 +50,7 @@ class _CreateTaskActionButton extends StatelessWidget {
           icon: const Icon(Icons.done),
           onPressed: () {
             if (editCompleted ?? false) {
-              bloc.taskSubmit.add(null);
+              bloc.dispatch(SubmitTaskEvent());
             } else {
               showShortToast(
                 msg: S.of(context).editTaskEmptyTitleError,
