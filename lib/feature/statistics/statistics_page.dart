@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/feature/router/router.dart';
+import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/statistics/statistics_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
+import 'package:flutter_bloc_todo/router/router.dart';
 
 @immutable
 class StatisticsPage extends StatelessWidget {

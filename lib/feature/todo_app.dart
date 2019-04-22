@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
+import 'package:flutter_bloc_todo/router/router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 class TodoApp extends StatelessWidget {

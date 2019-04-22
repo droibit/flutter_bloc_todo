@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
-import 'package:flutter_bloc_todo/feature/router/router.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_body.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/new/new_task_bloc.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
+import 'package:flutter_bloc_todo/router/router.dart';
 
 class NewTaskPage extends StatelessWidget {
   static final route = NamedRoute(
