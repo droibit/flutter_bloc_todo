@@ -2,28 +2,8 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
+import 'package:flutter_bloc_todo/feature/statistics/statistics_state.dart';
 import 'package:rxdart/rxdart.dart';
-
-@immutable
-class StatisticsView {
-  const StatisticsView({
-    this.activeCount,
-    this.completedCount,
-  });
-
-  factory StatisticsView.fromTasks(List<Task> tasks) {
-    final activeCount = tasks.where((task) => task.isActive).length;
-    return StatisticsView(
-      activeCount: activeCount,
-      completedCount: tasks.length - activeCount,
-    );
-  }
-
-  final int activeCount;
-  final int completedCount;
-
-  bool get hasNotTask => activeCount == 0 && completedCount == 0;
-}
 
 @immutable
 class StatisticsBloc implements Bloc {
@@ -33,9 +13,9 @@ class StatisticsBloc implements Bloc {
 
   final TaskRepository _taskRepository;
 
-  Observable<StatisticsView> get statisticsView {
+  Observable<StatisticsState> get statisticsState {
     return _taskRepository.tasks
-        .map((tasks) => StatisticsView.fromTasks(tasks));
+        .map((tasks) => StatisticsState.fromTasks(tasks));
   }
 
   @override

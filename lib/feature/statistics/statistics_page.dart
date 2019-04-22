@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
 import 'package:flutter_bloc_todo/feature/statistics/statistics_bloc.dart';
+import 'package:flutter_bloc_todo/feature/statistics/statistics_state.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/router/router.dart';
 
@@ -35,20 +36,20 @@ class _StatisticsPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = StatisticsBlocProvider.of(context);
-    return StreamBuilder<StatisticsView>(
-      stream: bloc.statisticsView,
+    return StreamBuilder<StatisticsState>(
+      stream: bloc.statisticsState,
       builder: (_context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
         }
 
-        final view = snapshot.data;
-        if (view.hasNotTask) {
+        final state = snapshot.data;
+        if (state.hasNotTask) {
           return const _EmptyView();
         }
         return _StatisticsView(
-          activeCount: view.activeCount,
-          completedCount: view.completedCount,
+          activeCount: state.activeCount,
+          completedCount: state.completedCount,
         );
       },
     );
