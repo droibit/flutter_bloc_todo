@@ -2,24 +2,20 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/task_completed.dart';
+import 'package:flutter_bloc_todo/feature/bloc_base.dart';
+import 'package:flutter_bloc_todo/feature/tasks/detail/task_detail_bloc_event.dart';
 import 'package:flutter_bloc_todo/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 @immutable
-class TaskDetailBloc implements Bloc {
+class TaskDetailBloc extends SimpleBlocBase {
   TaskDetailBloc({
     @required Task initialTask,
     @required TaskRepository taskRepository,
   })  : _taskRepository = taskRepository,
-        _taskId = initialTask.id,
-        _taskSubject = BehaviorSubject.seeded(initialTask),
-        _taskCompletedSubject = PublishSubject() {
-    _taskCompletedSubject.listen(_onTaskCompleted);
+        _taskSubject = BehaviorSubject.seeded(initialTask) {
     _taskRepository.tasks
-        .map(
-          (tasks) => tasks.firstWhere((task) => task.id == _taskId),
-        )
+        .map((tasks) => tasks.firstWhere((task) => task.id == initialTask.id))
         .pipe(_taskSubject);
   }
 
@@ -27,26 +23,32 @@ class TaskDetailBloc implements Bloc {
 
   final BehaviorSubject<Task> _taskSubject;
 
-  final PublishSubject<TaskCompleted> _taskCompletedSubject;
-
-  final String _taskId;
-
-  ValueObservable<Task> get task => _taskSubject.stream;
-
-  Sink<TaskCompleted> get taskCompleted => _taskCompletedSubject.sink;
+  ValueObservable<Task> get task => _taskSubject;
 
   @override
-  void dispose() {}
-
-  void _onTaskCompleted(TaskCompleted toggle) {
-    Logger.log(
-        '_onTaskCompletedToggled(task=${toggle.id}, completed=${toggle.completed})');
-
-    if (toggle.completed) {
-      _taskRepository.completeTask(toggle.id);
+  void onHandleEvent(BlocEvent event) {
+    if (event is ChangeTaskCompletedEvent) {
+      _onChangeTaskCompletedEvent(event);
     } else {
-      _taskRepository.activateTask(toggle.id);
+      throw ArgumentError('Unknown event: ${event.runtimeType}');
     }
+  }
+
+  void _onChangeTaskCompletedEvent(ChangeTaskCompletedEvent event) {
+    Logger.log(
+        'onChangeTaskCompletedEvent(task=${event.id}, completed=${event.completed})');
+
+    if (event.completed) {
+      _taskRepository.completeTask(event.id);
+    } else {
+      _taskRepository.activateTask(event.id);
+    }
+  }
+
+  @override
+  void dispose() {
+    _taskSubject.close();
+    super.dispose();
   }
 }
 
