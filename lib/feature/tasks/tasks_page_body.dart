@@ -77,7 +77,9 @@ class _TaskListView extends StatelessWidget {
 
   void _onTaskItemChecked(BuildContext context, Task task, bool completed) {
     final bloc = TasksBlocProvider.of(context);
-    bloc.dispatch(ChangeTaskCompletedEvent(id: task.id, completed: completed));
+    bloc.events.add(
+      ChangeTaskCompletedEvent(id: task.id, completed: completed),
+    );
   }
 
   void _onTaskItemTap(BuildContext context, Task task) {
@@ -250,7 +252,7 @@ class _TaskListHeader extends StatelessWidget {
     } else {
       newTaskSort = taskSort.copyWith(by: selectedSortBy);
     }
-    bloc.dispatch(ChangeTaskSortEvent(newTaskSort));
+    bloc.events.add(ChangeTaskSortEvent(newTaskSort));
   }
 }
 

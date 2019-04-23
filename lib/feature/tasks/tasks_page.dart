@@ -73,7 +73,7 @@ class _TasksFilterPopupMenu extends StatelessWidget {
   void _onMenuItemSelected(BuildContext context, TasksFilter newFilter) {
     Logger.log('onMenuItemSelected(item=$newFilter)');
     final bloc = TasksBlocProvider.of(context);
-    bloc.dispatch(ChangeTasksFilterEvent(newFilter));
+    bloc.events.add(ChangeTasksFilterEvent(newFilter));
   }
 }
 
@@ -119,7 +119,7 @@ class _OverflowPopupMenu extends StatelessWidget {
 
   void _onClearCompletedTaskSelected(BuildContext context) {
     final bloc = TasksBlocProvider.of(context);
-    bloc.dispatch(ClearCompletedTasksEvent());
+    bloc.events.add(ClearCompletedTasksEvent());
   }
 }
 

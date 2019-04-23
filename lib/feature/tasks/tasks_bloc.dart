@@ -12,14 +12,27 @@ typedef _Compare<T> = int Function(T a, T b);
 
 @immutable
 class TasksBloc extends SimpleBlocBase {
+  @visibleForTesting
   TasksBloc({
     @required TaskRepository taskRepository,
     @required UserSettingsRepository userSettingsRepository,
-  })  : assert(taskRepository != null),
-        assert(userSettingsRepository != null),
-        _taskRepository = taskRepository,
+    @required BehaviorSubject<TasksFilter> taskFilterSubject,
+  })  : _taskRepository = taskRepository,
         _userSettingsRepository = userSettingsRepository,
-        _taskFilterSubject = BehaviorSubject.seeded(TasksFilter.all);
+        _taskFilterSubject = taskFilterSubject;
+
+  factory TasksBloc._({
+    @required TaskRepository taskRepository,
+    @required UserSettingsRepository userSettingsRepository,
+  }) {
+    assert(taskRepository != null);
+    assert(userSettingsRepository != null);
+    return TasksBloc(
+      taskRepository: taskRepository,
+      userSettingsRepository: userSettingsRepository,
+      taskFilterSubject: BehaviorSubject.seeded(TasksFilter.all),
+    );
+  }
 
   final TaskRepository _taskRepository;
 
@@ -30,7 +43,7 @@ class TasksBloc extends SimpleBlocBase {
   Observable<TasksState> get tasksState {
     return Observable.combineLatest3(
       _taskRepository.tasks,
-      _taskFilterSubject,
+      _taskFilterSubject.stream,
       _userSettingsRepository.taskSort,
       (List<Task> tasks, TasksFilter filter, TaskSort taskSort) {
         return TasksState(
@@ -59,8 +72,10 @@ class TasksBloc extends SimpleBlocBase {
     switch (tasksSort.by) {
       case SortBy.title:
         return (tasksSort.order == Order.asc)
-            ? (lhs, rhs) => lhs.title.compareTo(rhs.title)
-            : (lhs, rhs) => rhs.title.compareTo(lhs.title);
+            ? (lhs, rhs) =>
+                lhs.title.toLowerCase().compareTo(rhs.title.toLowerCase())
+            : (lhs, rhs) =>
+                rhs.title.toLowerCase().compareTo(lhs.title.toLowerCase());
       case SortBy.created_date:
         return (tasksSort.order == Order.asc)
             ? (lhs, rhs) => lhs.timestamp.compareTo(rhs.timestamp)
@@ -128,7 +143,7 @@ class TasksBlocProvider extends BlocProvider<TasksBloc> {
         super(
           creator: (context, _) {
             final deps = DependencyProvider.of(context);
-            return TasksBloc(
+            return TasksBloc._(
               taskRepository: deps.taskRepository,
               userSettingsRepository: deps.userSettingsRepository,
             );

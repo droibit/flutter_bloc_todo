@@ -100,7 +100,9 @@ class _TaskDetailPageBody extends StatelessWidget {
 
   void _onTaskChecked(BuildContext context, Task task, bool completed) {
     final bloc = TaskDetailBlocProvider.of(context);
-    bloc.dispatch(ChangeTaskCompletedEvent(id: task.id, completed: completed));
+    bloc.events.add(
+      ChangeTaskCompletedEvent(id: task.id, completed: completed),
+    );
   }
 
   Widget _buildTimestampSection(BuildContext context, Task task) {

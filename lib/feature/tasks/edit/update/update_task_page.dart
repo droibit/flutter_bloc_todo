@@ -69,7 +69,7 @@ class _UpdateTaskActionButton extends StatelessWidget {
           icon: const Icon(Icons.done),
           onPressed: () {
             if (editCompleted ?? false) {
-              bloc.dispatch(SubmitTaskEvent());
+              bloc.events.add(SubmitTaskEvent());
             } else {
               showShortToast(
                 msg: S.of(context).editTaskEmptyTitleError,

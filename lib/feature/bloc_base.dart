@@ -1,26 +1,25 @@
+import 'dart:async';
+
 import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rxdart/rxdart.dart';
 
 class BlocEvent {}
 
 abstract class SimpleBlocBase implements Bloc {
   SimpleBlocBase() {
-    _eventSubject.listen(onHandleEvent);
+    _eventController.stream.listen(onHandleEvent);
   }
 
-  final _eventSubject = PublishSubject<BlocEvent>();
+  final _eventController = StreamController<BlocEvent>();
 
+  Sink<BlocEvent> get events => _eventController.sink;
+
+  @protected
   void onHandleEvent(BlocEvent event);
-
-  void dispatch(BlocEvent event) {
-    assert(event != null);
-    _eventSubject.add(event);
-  }
 
   @mustCallSuper
   @override
   void dispose() {
-    _eventSubject.close();
+    _eventController.close();
   }
 }

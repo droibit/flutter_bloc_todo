@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_base.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_event.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit_state.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 
 typedef EditableTaskBlocProvider = EditTaskBlocBase Function(
@@ -31,7 +30,7 @@ class _EditTaskBodyState extends State<EditTaskBody> {
 
     final bloc = widget._blocProvider(context);
     final _onEditText = () {
-      bloc.dispatch(
+      bloc.events.add(
         EditTaskEvent(
           title: _titleController.text,
           description: _descriptionController.text,
