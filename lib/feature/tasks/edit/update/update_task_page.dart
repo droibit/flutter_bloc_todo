@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/feature/_widgets/_widgets.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_event.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_body.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_view.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit_state.dart';
 import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_bloc.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_bloc_event.dart';
 import 'package:flutter_bloc_todo/generated/i18n.dart';
 import 'package:flutter_bloc_todo/router/router.dart';
 
@@ -35,8 +38,15 @@ class UpdateTaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UpdateTaskBlocProvider(
-      initialTask: _initialTask,
+    return BlocProviderTree(
+      blocProviders: <BlocProvider>[
+        UpdateTaskBlocProvider(
+          targetTaskId: _initialTask.id,
+        ),
+        EditTaskBlocProvider(
+          initialState: TaskEditState.fromTask(_initialTask),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           leading: const CloseButton(),
@@ -46,12 +56,31 @@ class UpdateTaskPage extends StatelessWidget {
             _UpdateTaskActionButton(),
           ],
         ),
-        body: const EditTaskBody(
-          blocProvider: UpdateTaskBlocProvider.of,
-        ),
+        body: const _UpdateTaskPageBody(),
       ),
     );
   }
+}
+
+class _UpdateTaskPageBody extends StatefulWidget {
+  const _UpdateTaskPageBody({Key key}) : super(key: key);
+
+  @override
+  State createState() => _UpdateTaskPageBodyState();
+}
+
+class _UpdateTaskPageBodyState extends State<_UpdateTaskPageBody> {
+  @override
+  void initState() {
+    super.initState();
+    final bloc = UpdateTaskBlocProvider.of(context);
+    bloc.updateTaskResult.listen((successful) {
+      Navigator.pop(context, successful);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const EditTaskView();
 }
 
 @immutable
@@ -60,16 +89,22 @@ class _UpdateTaskActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = UpdateTaskBlocProvider.of(context);
-    return StreamBuilder<bool>(
-      stream: bloc.taskEditCompleted,
+    final editTaskBloc = EditTaskBlocProvider.of(context);
+    return StreamBuilder<TaskEditState>(
+      stream: editTaskBloc.taskState,
       builder: (_context, snapshot) {
-        final editCompleted = snapshot.data;
+        final state = snapshot.data;
         return IconButton(
           icon: const Icon(Icons.done),
           onPressed: () {
-            if (editCompleted ?? false) {
-              bloc.events.add(SubmitTaskEvent());
+            if (state.isCompleted) {
+              final updateTaskBloc = UpdateTaskBlocProvider.of(_context);
+              updateTaskBloc.events.add(
+                UpdateTaskEvent(
+                  title: state.title,
+                  description: state.description,
+                ),
+              );
             } else {
               showShortToast(
                 msg: S.of(context).editTaskEmptyTitleError,

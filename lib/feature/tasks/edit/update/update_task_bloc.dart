@@ -2,49 +2,74 @@ import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/di/di.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/edit_task_bloc_base.dart';
-import 'package:flutter_bloc_todo/feature/tasks/edit/task_edit_state.dart';
+import 'package:flutter_bloc_todo/feature/bloc_base.dart';
+import 'package:flutter_bloc_todo/feature/tasks/edit/update/update_task_bloc_event.dart';
+import 'package:flutter_bloc_todo/utils/logger.dart';
+import 'package:rxdart/rxdart.dart';
 
 @immutable
-class UpdateTaskBloc extends EditTaskBlocBase {
+class UpdateTaskBloc extends SimpleBlocBase {
+  @visibleForTesting
   UpdateTaskBloc({
-    @required Task initialTask,
+    @required String targetTaskId,
     @required TaskRepository taskRepository,
-  })  : _taskRepository = taskRepository,
-        _taskId = initialTask.id,
-        super(
-          initialState: TaskEditState(
-            title: initialTask.title,
-            description: initialTask.description,
-          ),
-        );
+    @required PublishSubject<bool> updateResultSubject,
+  })  : _targetTaskId = targetTaskId,
+        _taskRepository = taskRepository,
+        _updateResultSubject = updateResultSubject;
+
+  factory UpdateTaskBloc._({
+    @required String targetTaskId,
+    @required TaskRepository taskRepository,
+  }) {
+    return UpdateTaskBloc(
+      targetTaskId: targetTaskId,
+      taskRepository: taskRepository,
+      updateResultSubject: PublishSubject(),
+    );
+  }
+
+  final String _targetTaskId;
 
   final TaskRepository _taskRepository;
 
-  final String _taskId;
+  final PublishSubject<bool> _updateResultSubject;
+
+  Observable<bool> get updateTaskResult => _updateResultSubject.stream;
 
   @override
-  Future<bool> submitTask(TaskEditState taskEdit) {
-    return _taskRepository.updateTask(
-      _taskId,
-      title: taskEdit.title,
-      description: taskEdit.description,
+  void onHandleEvent(BlocEvent event) {
+    if (event is UpdateTaskEvent) {
+      _onUpdateTaskEvent(event);
+    } else {
+      throw ArgumentError('Unknown event: ${event.runtimeType}');
+    }
+  }
+
+  Future<void> _onUpdateTaskEvent(UpdateTaskEvent event) async {
+    Logger.log('onUpdateTaskEvent($event)');
+
+    // TODO: Prevent double creation.
+    final successful = await _taskRepository.updateTask(
+      _targetTaskId,
+      title: event.title,
+      description: event.description,
     );
+    _updateResultSubject.add(successful);
   }
 }
 
 @immutable
 class UpdateTaskBlocProvider extends BlocProvider<UpdateTaskBloc> {
   UpdateTaskBlocProvider({
-    @required Task initialTask,
-    @required Widget child,
-  })  : assert(initialTask != null),
-        assert(child != null),
+    @required String targetTaskId,
+    Widget child,
+  })  : assert(targetTaskId != null),
         super(
           creator: (context, _) {
             final deps = DependencyProvider.of(context);
-            return UpdateTaskBloc(
-              initialTask: initialTask,
+            return UpdateTaskBloc._(
+              targetTaskId: targetTaskId,
               taskRepository: deps.taskRepository,
             );
           },
