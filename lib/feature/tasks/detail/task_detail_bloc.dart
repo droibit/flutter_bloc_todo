@@ -11,15 +11,18 @@ import 'package:rxdart/rxdart.dart';
 class TaskDetailBloc extends SimpleBlocBase {
   @visibleForTesting
   TaskDetailBloc({
-//    @required Task initialTask,
     @required TaskRepository taskRepository,
     @required BehaviorSubject<Task> taskSubject,
+    @required CompositeSubscription subscriptions,
   })  : _taskRepository = taskRepository,
-        _taskSubject = taskSubject {
+        _taskSubject = taskSubject,
+        _subscriptions = subscriptions {
     final initialTaskId = _taskSubject.value.id;
-    _taskRepository.tasks
-        .map((tasks) => tasks.firstWhere((task) => task.id == initialTaskId))
-        .pipe(_taskSubject);
+    _subscriptions.add(
+      _taskRepository.tasks
+          .map((tasks) => tasks.firstWhere((task) => task.id == initialTaskId))
+          .listen((task) => _taskSubject.add(task)),
+    );
   }
 
   factory TaskDetailBloc._({
@@ -29,12 +32,15 @@ class TaskDetailBloc extends SimpleBlocBase {
     return TaskDetailBloc(
       taskRepository: taskRepository,
       taskSubject: BehaviorSubject.seeded(initialTask),
+      subscriptions: CompositeSubscription(),
     );
   }
 
   final TaskRepository _taskRepository;
 
   final BehaviorSubject<Task> _taskSubject;
+
+  final CompositeSubscription _subscriptions;
 
   ValueObservable<Task> get task => _taskSubject;
 
@@ -60,7 +66,8 @@ class TaskDetailBloc extends SimpleBlocBase {
 
   @override
   void dispose() {
-//    _taskSubject.close();
+    _subscriptions.dispose();
+    _taskSubject.close();
     super.dispose();
   }
 }
