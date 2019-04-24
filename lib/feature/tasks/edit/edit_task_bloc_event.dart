@@ -8,15 +8,3 @@ class EditTaskEvent implements BlocEvent {
   final String title;
   final String description;
 }
-
-@immutable
-class SubmitTaskEvent implements BlocEvent {
-  factory SubmitTaskEvent() {
-    _instance ??= const SubmitTaskEvent._();
-    return _instance;
-  }
-
-  const SubmitTaskEvent._();
-
-  static SubmitTaskEvent _instance;
-}
