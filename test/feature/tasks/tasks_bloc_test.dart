@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc_todo/data/data.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc.dart';
 import 'package:flutter_bloc_todo/feature/tasks/tasks_bloc_event.dart';
