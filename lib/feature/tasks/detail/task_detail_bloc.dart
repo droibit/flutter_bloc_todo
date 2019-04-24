@@ -9,14 +9,27 @@ import 'package:rxdart/rxdart.dart';
 
 @immutable
 class TaskDetailBloc extends SimpleBlocBase {
+  @visibleForTesting
   TaskDetailBloc({
+//    @required Task initialTask,
+    @required TaskRepository taskRepository,
+    @required BehaviorSubject<Task> taskSubject,
+  })  : _taskRepository = taskRepository,
+        _taskSubject = taskSubject {
+    final initialTaskId = _taskSubject.value.id;
+    _taskRepository.tasks
+        .map((tasks) => tasks.firstWhere((task) => task.id == initialTaskId))
+        .pipe(_taskSubject);
+  }
+
+  factory TaskDetailBloc._({
     @required Task initialTask,
     @required TaskRepository taskRepository,
-  })  : _taskRepository = taskRepository,
-        _taskSubject = BehaviorSubject.seeded(initialTask) {
-    _taskRepository.tasks
-        .map((tasks) => tasks.firstWhere((task) => task.id == initialTask.id))
-        .pipe(_taskSubject);
+  }) {
+    return TaskDetailBloc(
+      taskRepository: taskRepository,
+      taskSubject: BehaviorSubject.seeded(initialTask),
+    );
   }
 
   final TaskRepository _taskRepository;
@@ -47,7 +60,7 @@ class TaskDetailBloc extends SimpleBlocBase {
 
   @override
   void dispose() {
-    _taskSubject.close();
+//    _taskSubject.close();
     super.dispose();
   }
 }
@@ -62,7 +75,7 @@ class TaskDetailBlocProvider extends BlocProvider<TaskDetailBloc> {
         super(
           creator: (context, _) {
             final deps = DependencyProvider.of(context);
-            return TaskDetailBloc(
+            return TaskDetailBloc._(
               initialTask: initialTask,
               taskRepository: deps.taskRepository,
             );
