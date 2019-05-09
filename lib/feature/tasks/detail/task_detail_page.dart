@@ -21,12 +21,8 @@ class TaskDetailPage extends StatelessWidget {
   static final route = NamedRoute(
     '/tasks/detail',
     (settings) => MaterialPageRoute<void>(
-          builder: (_) {
-            return TaskDetailPage(
-              // ignore: avoid_as
-              initialTask: settings.arguments as Task,
-            );
-          },
+          builder: (_) =>
+              TaskDetailPage(initialTask: settings.arguments as Task),
           settings: settings,
         ),
   );
@@ -68,9 +64,10 @@ class _TaskDetailPageBody extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
-              children: <Widget>[]
-                ..add(_buildTitleAndDescSection(context, task))
-                ..add(_buildTimestampSection(context, task)),
+              children: <Widget>[
+                _buildTitleAndDescSection(context, task),
+                _buildTimestampSection(context, task),
+              ],
             ),
           ),
         );

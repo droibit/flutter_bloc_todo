@@ -36,11 +36,12 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        children: <Widget>[]
-          ..add(_buildHeader(context))
-          ..addAll(_buildNavItems(context))
-          ..add(const Divider())
-          ..addAll(_buildFooter(context)),
+        children: <Widget>[
+          _buildHeader(context),
+          ..._buildNavItems(context),
+          const Divider(),
+          ..._buildFooter(context),
+        ],
         padding: EdgeInsets.zero,
       ),
     );

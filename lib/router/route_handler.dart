@@ -34,9 +34,9 @@ final _routes = <NamedRoute>[
   SettingsPage.route,
 ];
 
-final _router = Map<String, RouteFactory>.fromEntries(
-  _routes.map((route) => MapEntry(route.name, route.factory)),
-);
+final _router = <String, RouteFactory>{
+  for (var route in _routes) route.name: route.factory,
+};
 
 Route<dynamic> onHandleRoute(RouteSettings settings) {
   Logger.log('onRoute(name=${settings.name})');

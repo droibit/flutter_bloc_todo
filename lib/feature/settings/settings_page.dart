@@ -36,7 +36,9 @@ class _SettingsPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: <Widget>[]..addAll(_buildAppCategory(context)),
+      children: <Widget>[
+        ..._buildAppCategory(context),
+      ],
     );
   }
 
@@ -45,34 +47,33 @@ class _SettingsPageBody extends StatelessWidget {
     final bloc = SettingsBlocProvider.of(context);
     return <Widget>[
       _Category(title: strings.settings),
-    ]..addAll(
-        ListTile.divideTiles(
-          context: context,
-          tiles: <Widget>[
-            ListTile(
-              title: Text(strings.sourceCodeTitle),
-              subtitle: const Text('github.com'),
-              onTap: () => _onSourceCodeTap(context),
-            ),
-            StreamBuilder<PackageInfo>(
-              stream: bloc.packageInfo,
-              builder: (_, snapshot) {
-                final packageInfo = snapshot.data;
-                Logger.log('build app version($packageInfo).');
+      ...ListTile.divideTiles(
+        context: context,
+        tiles: <Widget>[
+          ListTile(
+            title: Text(strings.sourceCodeTitle),
+            subtitle: const Text('github.com'),
+            onTap: () => _onSourceCodeTap(context),
+          ),
+          StreamBuilder<PackageInfo>(
+            stream: bloc.packageInfo,
+            builder: (_, snapshot) {
+              final packageInfo = snapshot.data;
+              Logger.log('build app version($packageInfo).');
 
-                return ListTile(
-                  title: Text(strings.buildVersionTitle),
-                  subtitle: packageInfo == null
-                      ? null
-                      : Text(
-                          strings.buildVersionSubtitle(packageInfo.version),
-                        ),
-                );
-              },
-            ),
-          ],
-        ),
-      );
+              return ListTile(
+                title: Text(strings.buildVersionTitle),
+                subtitle: packageInfo == null
+                    ? null
+                    : Text(
+                        strings.buildVersionSubtitle(packageInfo.version),
+                      ),
+              );
+            },
+          ),
+        ],
+      ),
+    ];
   }
 
   Future<void> _onSourceCodeTap(BuildContext context) async {

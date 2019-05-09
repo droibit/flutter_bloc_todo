@@ -21,12 +21,8 @@ class UpdateTaskPage extends StatelessWidget {
   static final route = NamedRoute(
     '/tasks/edit/update',
     (settings) => MaterialPageRoute<bool>(
-          builder: (_) {
-            return UpdateTaskPage(
-              // ignore: avoid_as
-              initialTask: settings.arguments as Task,
-            );
-          },
+          builder: (_) =>
+              UpdateTaskPage(initialTask: settings.arguments as Task),
           settings: settings,
           fullscreenDialog: true,
         ),

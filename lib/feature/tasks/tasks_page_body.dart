@@ -221,23 +221,22 @@ class _TaskListHeader extends StatelessWidget {
               ),
               onTap: null,
             ),
-          ]..addAll(
-              items.entries.map((entry) {
-                final selectedSort = entry.key == taskSort.by;
-                return ListTile(
-                  leading: selectedSort
-                      ? Icon(_convertSortOrderIcon(taskSort.order))
-                      : SizedBox.fromSize(
-                          size: Size.square(theme.iconTheme.size),
-                        ),
-                  title: Text(entry.value),
-                  onTap: () => Navigator.pop(_context, entry.key),
-                  trailing: selectedSort
-                      ? Icon(Icons.check, color: theme.accentColor)
-                      : null,
-                );
-              }),
-            ),
+            ...items.entries.map((entry) {
+              final selectedSort = entry.key == taskSort.by;
+              return ListTile(
+                leading: selectedSort
+                    ? Icon(_convertSortOrderIcon(taskSort.order))
+                    : SizedBox.fromSize(
+                        size: Size.square(theme.iconTheme.size),
+                      ),
+                title: Text(entry.value),
+                onTap: () => Navigator.pop(_context, entry.key),
+                trailing: selectedSort
+                    ? Icon(Icons.check, color: theme.accentColor)
+                    : null,
+              );
+            }),
+          ],
         );
       },
     );
